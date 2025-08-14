@@ -1,0 +1,89 @@
+// src/admin/ApproveForms.js
+import React, { useState, useEffect } from 'react';
+import Sidebar from './Sidebar';
+
+const ApproveForms = () => {
+  const [forms, setForms] = useState([]);
+
+  // Simulate fetching forms from a local array or backend API
+  useEffect(() => {
+    const dummyForms = [
+      {
+        id: 1,
+        name: 'Aryan Sharma',
+        email: 'aryan@example.com',
+        projectTitle: 'AI Traffic Monitoring',
+        status: 'Pending'
+      },
+      {
+        id: 2,
+        name: 'Priya Yadav',
+        email: 'priya@example.com',
+        projectTitle: 'Smart Garbage Bin',
+        status: 'Pending'
+      }
+    ];
+    setForms(dummyForms);
+  }, []);
+
+  const handleApprove = (id) => {
+    setForms((prev) =>
+      prev.map((form) =>
+        form.id === id ? { ...form, status: 'Approved' } : form
+      )
+    );
+  };
+
+  const handleReject = (id) => {
+    setForms((prev) =>
+      prev.map((form) =>
+        form.id === id ? { ...form, status: 'Rejected' } : form
+      )
+    );
+  };
+
+  return (<div >
+     <Sidebar/>
+  
+    <div className="admin-content">
+      <h2>Approve Submitted Forms</h2>
+      <table className="admin-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Project Title</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {forms.map((form) => (
+            <tr key={form.id}>
+              <td>{form.name}</td>
+              <td>{form.email}</td>
+              <td>{form.projectTitle}</td>
+              <td>{form.status}</td>
+              <td>
+                <button onClick={() => handleApprove(form.id)} disabled={form.status !== 'Pending'}>
+                  Approve
+                </button>
+                <button onClick={() => handleReject(form.id)} disabled={form.status !== 'Pending'}>
+                  Reject
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+       <div>
+     
+      
+    </div>
+    </div>
+    </div>
+    
+  );
+};
+
+export default ApproveForms;

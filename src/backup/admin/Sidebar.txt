@@ -1,0 +1,68 @@
+// src/admin/Sidebar.js
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+
+const Sidebar = () => {
+  const [isOpen, setIsOpen] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      const mobile = window.innerWidth <= 768;
+      setIsMobile(mobile);
+      setIsOpen(!mobile);
+    };
+
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  const toggleSidebar = () => {
+    setIsOpen(prev => !prev);
+  };
+
+  const handleOverlayClick = () => {
+    if (isMobile) {
+      setIsOpen(false);
+    }
+  };
+
+  return (
+    <>
+      {/* Toggle Button */}
+      <button
+        className="sidebar-toggle"
+        onClick={toggleSidebar}
+        aria-label={isOpen ? 'Close sidebar' : 'Open sidebar'}
+      >
+        {isOpen ? '←' : '☰'}
+      </button>
+
+      {/* Sidebar */}
+      <div className={`admin-sidebar ${isOpen ? 'open' : 'closed'}`}>
+        <h3>Admin Panel</h3>
+        <nav>
+          <ul>
+            <li><Link to="/admin/dashboard">Dashboard</Link></li>
+            <li><Link to="/admin/forms">Approve Forms</Link></li>
+            <li><Link to="/admin/students">Student Profiles</Link></li>
+            <li><Link to="/admin/tracker">Selection Tracker</Link></li>
+            <li><Link to="/admin/notifications">Notifications</Link></li>
+            <li><Link to="/admin/documents">Document Verification</Link></li>
+            <li><Link to="/admin/meritlist">Merit List</Link></li>
+            <li><Link to="/admin/domain-batch">Domain Batch Management</Link></li>
+            <li><Link to="/admin/login">Logout</Link></li>
+          </ul>
+        </nav>
+      </div>
+
+      {/* Overlay for Mobile */}
+      {isMobile && isOpen && (
+        <div className="sidebar-overlay active" onClick={handleOverlayClick}></div>
+      )}
+    </>
+  );
+};
+
+export default Sidebar;

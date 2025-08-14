@@ -1,0 +1,108 @@
+import React, { useState } from 'react';
+import StudentProfileModal from './StudentProfileModal';
+import Sidebar from './Sidebar';
+import '../../App.css';
+
+// Dummy data for students. Replace this with data from your API.
+const dummyStudents = [
+    {
+        id: 1,
+        name: 'Aarav Sharma',
+        uniqueId: 'STC12345',
+        email: 'aarav.sharma@example.com',
+        course: 'Computer Science',
+        status: 'Pending',
+    },
+    {
+        id: 2,
+        name: 'Diya Patel',
+        uniqueId: 'STC67890',
+        email: 'diya.patel@example.com',
+        course: 'Electrical Engineering',
+        status: 'Approved',
+    },
+    {
+        id: 3,
+        name: 'Rohan Singh',
+        uniqueId: 'STC11223',
+        email: 'rohan.singh@example.com',
+        course: 'Mechanical Engineering',
+        status: 'Rejected',
+    },
+];
+
+const ApproveForm = () => {
+    const [students, setStudents] = useState(dummyStudents);
+    const [selectedStudent, setSelectedStudent] = useState(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const handleViewProfile = (student) => {
+        setSelectedStudent(student);
+        setIsModalOpen(true);
+    };
+
+    const handleCloseModal = () => {
+        setIsModalOpen(false);
+        setSelectedStudent(null);
+    };
+
+    const handleApprove = (id) => {
+        setStudents(students.map(s => s.id === id ? { ...s, status: 'Approved' } : s));
+    };
+
+    const handleReject = (id) => {
+        setStudents(students.map(s => s.id === id ? { ...s, status: 'Rejected' } : s));
+    };
+
+    return ( 
+         <div className="admin-layout">
+              <Sidebar />
+        <div className="admin-main">
+            <h2>Approve Student Registrations</h2>
+            <table className="admin-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Unique ID</th>
+                        <th>Course</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {students.map((student) => (
+                        <tr key={student.id}>
+                            <td>{student.name}</td>
+                            <td>{student.uniqueId}</td>
+                            <td>{student.course}</td>
+                            <td>
+                                <span className={`status ${student.status.toLowerCase()}`}>{student.status}</span>
+                            </td>
+                            <td>
+                                <button onClick={() => handleViewProfile(student)} className="view-btn">View Profile</button>
+                                <button 
+                                    onClick={() => handleApprove(student.id)} 
+                                    disabled={student.status === 'Approved'}
+                                >
+                                    Approve
+                                </button>
+                                <button 
+                                    onClick={() => handleReject(student.id)} 
+                                    disabled={student.status === 'Rejected'}
+                                >
+                                    Reject
+                                </button>
+                            </td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+
+            {isModalOpen && <StudentProfileModal student={selectedStudent} onClose={handleCloseModal} />}
+        </div>
+        </div>
+    );
+};
+
+export default ApproveForm;
+
