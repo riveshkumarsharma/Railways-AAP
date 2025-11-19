@@ -23,7 +23,7 @@ function App() {
     <ThemeProvider>
       <BrowserRouter>
         <div>
-          <div className='notice'> This side is under maintenance </div>
+          {/* <div className='notice'> This side is under maintenance </div> */}
           <Header />
           <div>
           <Routes>
